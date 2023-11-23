@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 300px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .button-container {
+            text-align: center;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #predictionResult {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Model Prediction</h1>
+
+        <div class="input-group">
+            <label for="sepalLength">Sepal Length:</label>
+            <input type="number" id="sepalLength" placeholder="Enter sepal length">
+        </div>
+
+        <div class="input-group">
+            <label for="sepalWidth">Sepal Width:</label>
+            <input type="number" id="sepalWidth" placeholder="Enter sepal width">
+        </div>
+
+        <div class="input-group">
+            <label for="petalLength">Petal Length:</label>
+            <input type="number" id="petalLength" placeholder="Enter petal length">
+        </div>
+
+        <div class="input-group">
+            <label for="petalWidth">Petal Width:</label>
+            <input type="number" id="petalWidth" placeholder="Enter petal width">
+        </div>
+
+        <div class="button-container">
+            <button onclick="predictClass()">Predict Class</button>
+        </div>
+
+        <p id="predictionResult">Prediction result will be displayed here.</p>
+
+        <script>
+            async function predictClass() {
+                const sepalLength = document.getElementById("sepalLength").value;
+                const sepalWidth = document.getElementById("sepalWidth").value;
+                const petalLength = document.getElementById("petalLength").value;
+                const petalWidth = document.getElementById("petalWidth").value;
+
+                const inputData = [sepalLength, sepalWidth, petalLength, petalWidth].join(',');
+
+                const response = await fetch('/predict_class', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ "data": inputData.split(',').map(Number) })
+                });
+
+                const result = await response.json();
+                document.getElementById("predictionResult").innerText = `Predicted Class: ${result.class}`;
+            }
+        </script>
+    </div>
+</body>
+</html>
